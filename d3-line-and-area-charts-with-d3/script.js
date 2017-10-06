@@ -3,7 +3,7 @@
   var path;
   var subjects;
 
-  $.getJSON('//jsbin.com/vegaqi/1.js', function (json) {
+  $.getJSON('https://jsbin.com/vegaqi/1.js', function (json) {
     subjects = json;
 
     _.keys(subjects).forEach(function (subject) {
