@@ -1,56 +1,56 @@
-  var w = 300;
-  var h = 200;
-  var path;
-  var subjects;
+var w = 300;
+var h = 200;
+var path;
+var subjects;
 
-  $.getJSON('https://jsbin.com/vegaqi/1.js', function (json) {
-    subjects = json;
+$.getJSON('data.json', function (json) {
+  subjects = json;
 
-    _.keys(subjects).forEach(function (subject) {
-      subjects[subject].forEach(function (d) {
-        d.date = d3.time.format("%Y%m%d").parse(d.date);
-      });
+  _.keys(subjects).forEach(function (subject) {
+    subjects[subject].forEach(function (d) {
+      d.date = d3.time.format("%Y%m%d").parse(d.date);
     });
-
-    path = d3
-      .select('#chart')
-      .append('svg')
-      .attr('width', '100%')
-      .attr('height', '100%')
-      .append('g')
-      .append('path');
-
-    updateChart('math');
   });
 
-  function updateChart (subject) {
-    var data = subjects[subject];
-    var dates = _.map(data, 'date');
-    var counts = _.map(data, 'count');
+  path = d3
+    .select('#chart')
+    .append('svg')
+    .attr('width', '100%')
+    .attr('height', '100%')
+    .append('g')
+    .append('path');
 
-    var x = d3.time.scale()
-      .domain(d3.extent(dates))
-      .range([0, w]);
+  updateChart('math');
+});
 
-    var y = d3.scale.linear()
-      .domain(d3.extent(counts))
-      .range([h, 0]);
+function updateChart (subject) {
+  var data = subjects[subject];
+  var dates = _.map(data, 'date');
+  var counts = _.map(data, 'count');
 
-    var area = d3.svg.area()
-      .interpolate('bundle')
-      .x(function (d) {
-        return x(d.date);
-      })
-      .y0(function (d) {
-        return y(0);
-      })
-      .y1(function (d) {
-        return y(d.count);
-      });
+  var x = d3.time.scale()
+    .domain(d3.extent(dates))
+    .range([0, w]);
 
-    path
-      .datum(data)
-      .transition()
-      .duration(450)
-      .attr('d', area);
-  }
+  var y = d3.scale.linear()
+    .domain(d3.extent(counts))
+    .range([h, 0]);
+
+  var area = d3.svg.area()
+    .interpolate('bundle')
+    .x(function (d) {
+      return x(d.date);
+    })
+    .y0(function (d) {
+      return y(0);
+    })
+    .y1(function (d) {
+      return y(d.count);
+    });
+
+  path
+    .datum(data)
+    .transition()
+    .duration(450)
+    .attr('d', area);
+}
